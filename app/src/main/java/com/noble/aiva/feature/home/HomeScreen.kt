@@ -29,3 +29,16 @@ fun HomeScreen(count: Int, onIncrease: () -> Unit){
         }
     }
 }
+@Composable
+fun HomeScreen2(){
+    // day 5
+    var showTitle by remember {
+        mutableStateOf(true)
+    }
+    if (showTitle){
+        Text("Welcome to AIVA")
+    }
+    Button(onClick = { showTitle = !showTitle }) {
+        Text("Toggle")
+    }
+}
