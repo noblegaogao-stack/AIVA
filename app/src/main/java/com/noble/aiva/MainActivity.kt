@@ -15,7 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.noble.aiva.feature.home.HomeScreen
 import com.noble.aiva.feature.home.HomeScreen2
+import com.noble.aiva.feature.home.HomeScreen3
 import com.noble.aiva.feature.home.HomeViewModel
+import com.noble.aiva.feature.home.component.Counter
+import com.noble.aiva.feature.home.component.Welcome
 import com.noble.aiva.ui.theme.AIVATheme
 
 
@@ -27,7 +30,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AIVATheme {
-                HomeScreen2()
+                Counter()
+                Welcome()
+
+//                HomeScreen3()
+
+//                HomeScreen2()
 //                HomeScreen(count = viewModel.count.collectAsState().value, onIncrease = viewModel::increase)
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                    Greeting(

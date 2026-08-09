@@ -42,3 +42,25 @@ fun HomeScreen2(){
         Text("Toggle")
     }
 }
+@Composable
+fun HomeScreen3(){
+    Column() {
+        Counter()
+        Welcome()
+    }
+}
+@Composable
+fun Counter(){
+    var count by remember {
+        mutableStateOf(0)
+    }
+    Button(onClick = { count++ }) {
+        Text("Count: $count")
+        println("Counter Recompose")
+    }
+}
+@Composable
+fun Welcome(){
+    println("Welcome Recompose")
+    Text("Welcome to AIVA")
+}

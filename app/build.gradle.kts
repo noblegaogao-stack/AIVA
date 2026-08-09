@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.noble.aiva"
-        minSdk = 36
+        minSdk = 30
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
