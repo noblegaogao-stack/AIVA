@@ -12,7 +12,7 @@ class HomeViewModel(private val repository: AudioRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState
 
-    val useCase = StartRecordingUseCase(repository)
+
 
     fun changeWelcomeText(){
         _uiState.value = _uiState.value.copy(welcomeText = "Welcome to Kotlin")
@@ -21,10 +21,11 @@ class HomeViewModel(private val repository: AudioRepository) : ViewModel() {
     fun onEvent(event: HomeEvent){
         when(event){
             is HomeEvent.RecordClicked -> {
-               repository.startRecord()
+//               repository.startRecord()
+                val useCase = StartRecordingUseCase(repository)
             }
             is HomeEvent.StopRecordClicked -> {
-                repository.stopRecord()
+//                repository.stopRecord()
             }
         }
     }
