@@ -1,14 +1,18 @@
 package com.noble.aiva.feature.home
 
 import androidx.lifecycle.ViewModel
+import com.noble.aiva.data.repository.AudioRepository
+import com.noble.aiva.domain.usecase.StartRecordingUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val repository: AudioRepository) : ViewModel() {
     // MutableStateFlow，可变的状态数据流容器， HomeUIState：自定义界面状态数据类
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState
+
+    val useCase = StartRecordingUseCase(repository)
 
     fun changeWelcomeText(){
         _uiState.value = _uiState.value.copy(welcomeText = "Welcome to Kotlin")
@@ -17,10 +21,10 @@ class HomeViewModel : ViewModel() {
     fun onEvent(event: HomeEvent){
         when(event){
             is HomeEvent.RecordClicked -> {
-                _uiState.value = _uiState.value.copy(isRecording = true)
+               repository.startRecord()
             }
             is HomeEvent.StopRecordClicked -> {
-                _uiState.value = _uiState.value.copy(isRecording = false)
+                repository.stopRecord()
             }
         }
     }
