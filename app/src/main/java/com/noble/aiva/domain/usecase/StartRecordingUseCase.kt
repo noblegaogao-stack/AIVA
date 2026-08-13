@@ -1,13 +1,14 @@
 package com.noble.aiva.domain.usecase
 
 import com.noble.aiva.data.repository.AudioRepository
+import jakarta.inject.Inject
 
-class StartRecordingUseCase (private val repository: AudioRepository){
+open class StartRecordingUseCase @Inject constructor(private val repository: AudioRepository){
 //    fun execute(){
 //        repository.startRecord()
 //    }
 //     等价的方法
-    operator fun invoke() {
+    open operator fun invoke() {
         repository.startRecord()
     }
 

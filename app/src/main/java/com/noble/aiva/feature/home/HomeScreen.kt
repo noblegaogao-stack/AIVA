@@ -86,24 +86,26 @@ fun PrintText(){
     OutlinedTextField(value = text, onValueChange = { text = it }, label = { Text("请输入内容") })
 }
 //=====================================================================================
-@Composable
-fun HomeScreen5(viewModel: HomeViewModel){
-    val uiState by viewModel.uiState.collectAsState()
-
-    Column {
-//        这个地方获取默认的值，welcomeText: String = "Welcome to AIVA"
-        Text(text = uiState.welcomeText)
-//        点击button ，触发changeWelcomeText()，viewModel重新赋值调用的是 内部的 可变状态流容器 MutableStateFlow
-        Button(onClick = { viewModel.changeWelcomeText() }) {
-            Text("Change Welcome Text")
-        }
-    }
-}
+//@Composable
+//fun HomeScreen5(viewModel: HomeViewModel){
+//    val uiState by viewModel.uiState.collectAsState()
+//
+//    Column {
+////        这个地方获取默认的值，welcomeText: String = "Welcome to AIVA"
+//        Text(text = uiState.welcomeText)
+////        点击button ，触发changeWelcomeText()，viewModel重新赋值调用的是 内部的 可变状态流容器 MutableStateFlow
+//        Button(onClick = { viewModel.changeWelcomeText() }) {
+//            Text("Change Welcome Text")
+//        }
+//    }
+//}
 
 
 //========================================================================
 @Composable
 fun HomeScreen6(viewModel: HomeViewModel){
+
+
     val uiState by viewModel.uiState.collectAsState()
     Button(onClick = {
         viewModel.onEvent(HomeEvent.RecordClicked)
