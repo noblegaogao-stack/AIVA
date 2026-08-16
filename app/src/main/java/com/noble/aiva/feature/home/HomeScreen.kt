@@ -1,5 +1,6 @@
 package com.noble.aiva.feature.home
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.material3.Button
@@ -8,6 +9,7 @@ import androidx.compose.material3.OutlinedTextField
 import com.noble.aiva.R
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -104,13 +106,26 @@ fun PrintText(){
 //========================================================================
 @Composable
 fun HomeScreen6(viewModel: HomeViewModel){
-
-
     val uiState by viewModel.uiState.collectAsState()
-    Button(onClick = {
-        viewModel.onEvent(HomeEvent.RecordClicked)
-    }) {
-        Text(text = uiState.welcomeText)
+    if (uiState.isRecording){
+        Text("正在录音...")
+    } else {
+        Text("开始录音")
+    }
+
+    // 观察 SharedFlow
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is HomeEvent.RecordClicked -> {
+//                    Text(text = "开始录音")
+//                    Toast.makeText(context, "开始录音", Toast.LENGTH_SHORT).show();
+                }
+                is HomeEvent.StopRecordClicked -> {
+//                    Text(text = "停止录音")
+                }
+            }
+        }
     }
 }
 
