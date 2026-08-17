@@ -17,9 +17,11 @@ import com.noble.aiva.feature.home.HomeScreen
 import com.noble.aiva.feature.home.HomeScreen2
 import com.noble.aiva.feature.home.HomeScreen3
 import com.noble.aiva.feature.home.HomeScreen4
+import com.noble.aiva.feature.home.HomeScreen9
 import com.noble.aiva.feature.home.HomeViewModel
 import com.noble.aiva.feature.home.component.Counter
 import com.noble.aiva.feature.home.component.Welcome
+import com.noble.aiva.navigation.AppNavGraph
 import com.noble.aiva.ui.theme.AIVATheme
 
 
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AIVATheme {
+                AppNavGraph()
 //                HomeScreen5(viewModel)
 //                HomeScreen4()
 //                Counter()
