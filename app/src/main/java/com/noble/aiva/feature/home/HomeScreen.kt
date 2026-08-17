@@ -1,5 +1,6 @@
 package com.noble.aiva.feature.home
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import android.widget.Toast.makeText
 import androidx.compose.foundation.layout.Column
@@ -16,10 +17,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.noble.aiva.data.repository.UpdateState
+import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -107,11 +113,27 @@ fun PrintText(){
 
 
 //========================================================================
+
 @Composable
-fun HomeScreen6(viewModel: HomeViewModel){
+fun showToast(): (String) -> Unit {
     val context = LocalContext.current
+    return remember(context) {
+        { message: String ->
+            makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
+
+
+@Composable
+fun HomeScreen6(viewModel: HomeViewModel) {
+    val context = LocalContext.current
+//    val context = LocalContext.current.applicationContext
+    val showToast = showToast()
+
     val uiState by viewModel.uiState.collectAsState()
-    if (uiState.isRecording){
+    if (uiState.isRecording) {
         Text("正在录音...")
     } else {
         Text("开始录音")
@@ -121,13 +143,16 @@ fun HomeScreen6(viewModel: HomeViewModel){
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                UpdateState.LOADING -> {
-                    makeText(
-                        context,
-                        "上传中...",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                UpdateState.LOADING -> showToast("Uploading....")
+//                UpdateState.LOADING -> {
+//                    Toast.makeText(
+//                        context,
+//                        "上传中...",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+
+//                }
+
                 else -> {
                     Unit
                 }
@@ -137,7 +162,27 @@ fun HomeScreen6(viewModel: HomeViewModel){
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+fun HomeScreen7(){
+    // 不能用这个，Composable 函数可能被 Recomposition 多次执行。
+    CoroutineScope(Dispatchers.IO).launch {
+        // 执行上传
+    }
+    // 自动执行
+//    LaunchedEffect(Unit) {
+//        println("进入界面")
+//    }
+//    Text("Home")
+    // 事件触发
+    val scope = rememberCoroutineScope()
+    Button(onClick = {scope.launch {
+        //执行任务
+    }}) {
+        Text("上传")
+    }
 
+}
 
 
 
