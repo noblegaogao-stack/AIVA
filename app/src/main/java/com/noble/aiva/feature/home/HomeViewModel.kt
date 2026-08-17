@@ -3,6 +3,7 @@ package com.noble.aiva.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.noble.aiva.data.repository.AudioRepository
+import com.noble.aiva.data.repository.UpdateState
 import com.noble.aiva.domain.usecase.StartRecordingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -19,15 +20,16 @@ class HomeViewModel @Inject constructor(private val audioRepository: AudioReposi
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState("waiting"));
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<HomeEvent>()
+    private val _events = MutableSharedFlow<UpdateState>()
     val events = _events.asSharedFlow()
 
     fun uploadAudio(){
 
         viewModelScope.launch {
-            _uiState.value = HomeUiState("uploading")
+            _uiState.value = HomeUiState("uploading", isUploading = true)
             val result = audioRepository.uploadAudio()
-            _uiState.value = HomeUiState("Uploaded: $result")
+            _uiState.value = HomeUiState("Uploaded: $result", isUploading = false)
+            _events.emit(UpdateState.LOADING)
         }
     }
 }

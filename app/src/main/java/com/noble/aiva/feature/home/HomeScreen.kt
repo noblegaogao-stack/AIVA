@@ -1,6 +1,7 @@
 package com.noble.aiva.feature.home
 
 import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.compose.foundation.layout.Column
 
 import androidx.compose.material3.Button
@@ -16,7 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import com.noble.aiva.data.repository.UpdateState
 
 
 @Composable
@@ -106,6 +109,7 @@ fun PrintText(){
 //========================================================================
 @Composable
 fun HomeScreen6(viewModel: HomeViewModel){
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     if (uiState.isRecording){
         Text("正在录音...")
@@ -117,13 +121,17 @@ fun HomeScreen6(viewModel: HomeViewModel){
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                is HomeEvent.RecordClicked -> {
-//                    Text(text = "开始录音")
-//                    Toast.makeText(context, "开始录音", Toast.LENGTH_SHORT).show();
+                UpdateState.LOADING -> {
+                    makeText(
+                        context,
+                        "上传中...",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                is HomeEvent.StopRecordClicked -> {
-//                    Text(text = "停止录音")
+                else -> {
+                    Unit
                 }
+
             }
         }
     }
