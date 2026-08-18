@@ -4,5 +4,4 @@ package com.noble.aiva.feature.home
 data class HomeUiState(
     val welcomeText: String = "Welcome to AIVA",
     val isRecording: Boolean = false,
-    val isUploading: Boolean = false
 )

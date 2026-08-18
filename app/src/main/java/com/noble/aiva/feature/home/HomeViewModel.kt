@@ -16,20 +16,22 @@ import kotlinx.coroutines.launch
 //@HiltViewModel 告诉 Hilt：这是一个由 Hilt 管理的 ViewModel。
 //@Inject constructor 告诉 Hilt：创建这个 ViewModel 时，需要通过这个构造函数注入依赖。
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val audioRepository: AudioRepository) : ViewModel() {
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState("waiting"));
+class HomeViewModel @Inject constructor(private val startRecordingUseCase: StartRecordingUseCase) : ViewModel() {
+    // home ui state, isRecording 是否录音
+    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState("waiting"))
+    // 对外提供的UI，主要由 Composable 实现的UI使用。
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<UpdateState>()
+    // 定义的Event 动作，
+    private val _events = MutableSharedFlow<HomeEvent>()
+    // 对外提供的Event 动作
     val events = _events.asSharedFlow()
 
-    fun uploadAudio(){
+    private val _audioRepository = startRecordingUseCase
 
-        viewModelScope.launch {
-            _uiState.value = HomeUiState("uploading", isUploading = true)
-            val result = audioRepository.uploadAudio()
-            _uiState.value = HomeUiState("Uploaded: $result", isUploading = false)
-            _events.emit(UpdateState.LOADING)
-        }
+    val audioRepository = _audioRepository
+
+    fun startRecording(){
+        _uiState.value = HomeUiState("recording",true)
     }
 }

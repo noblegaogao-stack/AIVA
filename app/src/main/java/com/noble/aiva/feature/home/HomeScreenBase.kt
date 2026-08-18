@@ -139,7 +139,7 @@ fun HomeScreen6(viewModel: HomeViewModel) {
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
-                UpdateState.LOADING -> showToast("Uploading....")
+//                UpdateState.LOADING -> showToast("Uploading....")
 //                UpdateState.LOADING -> {
 //                    Toast.makeText(
 //                        context,

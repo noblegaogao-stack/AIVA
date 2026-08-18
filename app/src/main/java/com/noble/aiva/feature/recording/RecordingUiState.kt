@@ -1,7 +1,7 @@
 package com.noble.aiva.feature.recording
 
 data class RecordingUiState(
-    val audioId: String = "00000",
-    val startRecording: Boolean = false,
-    val finishRecording: Boolean = false
+    val isRecording: Boolean = false,
+    val duration: Int = 0,
+    val errorMessage: String? = null
 )

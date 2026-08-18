@@ -1,5 +1,6 @@
 package com.noble.aiva.di
 
+import com.noble.aiva.data.repository.AudioRecorder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

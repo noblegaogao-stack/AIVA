@@ -1,5 +1,6 @@
 package com.noble.aiva.di
 
+import com.noble.aiva.data.repository.AudioRecorder
 import com.noble.aiva.data.repository.AudioRepository
 import com.noble.aiva.domain.usecase.StartRecordingUseCase
 

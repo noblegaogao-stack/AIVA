@@ -4,5 +4,4 @@ package com.noble.aiva.feature.home
 sealed interface HomeEvent {
     // 单例数据类
     data object RecordClicked: HomeEvent
-    data object StopRecordClicked: HomeEvent
 }

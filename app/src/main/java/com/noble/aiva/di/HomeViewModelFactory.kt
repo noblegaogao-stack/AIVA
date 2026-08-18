@@ -7,7 +7,7 @@ import com.noble.aiva.domain.usecase.StartRecordingUseCase
 import com.noble.aiva.feature.home.HomeViewModel
 
 @Suppress("UNCHECKED_CAST")
-class HomeViewModelFactory(private val useCase: AudioRepository) : ViewModelProvider.Factory{
+class HomeViewModelFactory(private val useCase: StartRecordingUseCase) : ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return HomeViewModel(useCase) as T
     }

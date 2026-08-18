@@ -11,5 +11,13 @@ class ResultViewModel @Inject constructor(
     savedStateHandler: SavedStateHandle,
     private val repository: AudioRepository
     ) : ViewModel() {
-    val audioId = savedStateHandler.get<String>("audioId")
+
+      // ViewModel 获取参数的第二种方法，SaveStateHandle
+    private val _audioId = savedStateHandler.get<String>("audioId")
+    val audioId = _audioId
+
+    // 根据id ，从repository中取出
+    fun getRecordResult(){
+//        repository.get()
+    }
 }
