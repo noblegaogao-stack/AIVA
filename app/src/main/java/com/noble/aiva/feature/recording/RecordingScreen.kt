@@ -56,6 +56,10 @@ fun RecordingScreen(viewModel: RecordingViewModel,
             )
         }
 
+        // 触发导航函数，
+        Button(onRecordingFinish) {
+            Text("进入下一页")
+        }
     }
 
 }

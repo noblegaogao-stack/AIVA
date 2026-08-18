@@ -9,10 +9,9 @@ import jakarta.inject.Inject
 @HiltViewModel
 class ResultViewModel @Inject constructor(
     savedStateHandler: SavedStateHandle,
-    private val repository: AudioRepository
     ) : ViewModel() {
 
-      // ViewModel 获取参数的第二种方法，SaveStateHandle
+        // ViewModel 获取参数的第二种方法，SaveStateHandle
     private val _audioId = savedStateHandler.get<String>("audioId")
     val audioId = _audioId
 
