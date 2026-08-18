@@ -5,8 +5,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.noble.aiva.feature.home.HomeScreen9
-import com.noble.aiva.feature.home.RecordingScreen
-import com.noble.aiva.feature.home.ResultScreen
+import com.noble.aiva.feature.recording.RecordingScreen
+import com.noble.aiva.feature.recording.RecordingViewModel
+import com.noble.aiva.feature.result.ResultScreen
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun AppNavGraph(){
@@ -23,14 +25,16 @@ fun AppNavGraph(){
             )
         }
         composable("recording"){
-            RecordingScreen(
-                onRecordingFinish = {
-                    navController.navigate("result")
-                }
-            )
+            val viewModel: RecordingViewModel = hiltViewModel()
+//            RecordingScreen(
+//                onRecordingFinish = {
+//                    navController.navigate("result/10086")
+//                }
+//            )
         }
-        composable("result"){
-            ResultScreen(
+        composable("result/{audioId}"){
+            val audioId = it.arguments?.getString("audioId")
+            ResultScreen(audioId,
                 onBack = {
                     navController.popBackStack()
                 }

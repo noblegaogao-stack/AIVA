@@ -5,29 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.noble.aiva.feature.home.HomeScreen
-import com.noble.aiva.feature.home.HomeScreen2
-import com.noble.aiva.feature.home.HomeScreen3
-import com.noble.aiva.feature.home.HomeScreen4
-import com.noble.aiva.feature.home.HomeScreen9
 import com.noble.aiva.feature.home.HomeViewModel
-import com.noble.aiva.feature.home.component.Counter
-import com.noble.aiva.feature.home.component.Welcome
+import com.noble.aiva.feature.recording.RecordingViewModel
+import com.noble.aiva.feature.result.ResultViewModel
 import com.noble.aiva.navigation.AppNavGraph
 import com.noble.aiva.ui.theme.AIVATheme
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<HomeViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
