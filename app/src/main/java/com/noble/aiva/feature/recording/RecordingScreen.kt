@@ -1,5 +1,11 @@
 package com.noble.aiva.feature.recording
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -9,18 +15,41 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable()
 fun RecordingScreen(viewModel: RecordingViewModel,
                     onRecordingFinish: () -> Unit) {
 
+    val context = LocalContext.current
+    val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
+    val recordingFile by viewModel.recordingFile.collectAsStateWithLifecycle()
+
     val uiState by viewModel.uiState.collectAsState()
 
-    // 这里产生audioId
+    /**
+     * Androdi 申请录音权限
+     * 保存权限，不用每次重组的时候，重新创建一个新的权限请求器
+     * Launcher 与 Compose 生命周期正确连接起来。
+     * “以后我要向 Android 系统请求某种结果”的工具。
+     */
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            viewModel.startRecording()
+        } else {
+            viewModel.onMicrophonePermissionDenied()
+        }
+    }
 
+    // 这里产生audioId
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
 
         Text(
@@ -38,13 +67,22 @@ fun RecordingScreen(viewModel: RecordingViewModel,
         // Recording 正在录音，有一个 录音计时器 时间跳动，一个按钮“停止录音”，点击停止计时器
         Button(onClick = {
             if (uiState.isRecording){
-                viewModel.onEvent(
-                    RecordingEvent.StopClicked
-                )
+                viewModel.stopRecording()
             } else {
-                viewModel.onEvent(
-                    RecordingEvent.StartClicked
-                )
+                /**
+                 * 当前没有录音，
+                 * 先检查权限
+                 */
+                val hasPermission = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.RECORD_AUDIO
+                ) == PackageManager.PERMISSION_GRANTED
+
+                if (hasPermission){
+                    viewModel.startRecording()
+                } else {
+                    permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                }
             }
         }) {
             Text(
@@ -55,6 +93,13 @@ fun RecordingScreen(viewModel: RecordingViewModel,
                 }
             )
         }
+
+        recordingFile?.let{filePath ->
+            Text(
+                text = "录音文件路径：$filePath"
+            )
+        }
+
 
         // 触发导航函数，
         Button(onRecordingFinish) {

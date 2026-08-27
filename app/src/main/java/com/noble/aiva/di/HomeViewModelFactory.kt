@@ -2,7 +2,6 @@ package com.noble.aiva.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.noble.aiva.data.repository.AudioRepository
 import com.noble.aiva.domain.usecase.StartRecordingUseCase
 import com.noble.aiva.feature.home.HomeViewModel
 

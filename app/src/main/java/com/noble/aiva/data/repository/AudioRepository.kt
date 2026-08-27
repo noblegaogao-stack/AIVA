@@ -1,22 +1,6 @@
 package com.noble.aiva.data.repository
 
-import jakarta.inject.Inject
-import kotlinx.coroutines.delay
-
-class AudioRepository @Inject constructor(private val audioRecorder: AudioRecorder){
-
-    fun startRecord(){
-        println("startRecord")
-        audioRecorder.startRecord()
-    }
-
-    fun stopRecord(){
-        println("stopRecord")
-        audioRecorder.stopRecord()
-    }
-
-    suspend fun uploadAudio(): String {
-        delay( 2000L)
-        return "audioUrl"
-    }
+interface AudioRepository {
+    fun startRecord()
+    suspend fun stopRecord(): String
 }
