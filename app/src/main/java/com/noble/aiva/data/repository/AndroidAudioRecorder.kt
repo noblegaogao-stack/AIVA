@@ -6,11 +6,13 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import androidx.annotation.RequiresPermission
+import com.noble.aiva.data.audio.WavFileWriter
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
@@ -30,13 +32,17 @@ class AndroidAudioRecorder @Inject constructor(
         //    44100Hz: 音乐播放
         //    48000Hz: 视频
 
-        private val sampleRate = 44100
+        private val sampleRate = 16000
 
         //CHANNEL_IN_MONO 单声道，左右变成一个声道
-        private val channelConfig = AudioFormat.CHANNEL_IN_MONO
+        private const val channelConfig = AudioFormat.CHANNEL_IN_MONO
 
         // 16位PCM， ENCODING_PCM_16BIT
-        private val audioFormat = AudioFormat.ENCODING_PCM_16BIT
+        private const val audioFormat = AudioFormat.ENCODING_PCM_16BIT
+
+        private const val CHANNELS = 1
+
+        private const val BITS_PER_SAMPLE = 16
     }
 
     private var audioRecord: AudioRecord ?= null
@@ -65,33 +71,34 @@ class AndroidAudioRecorder @Inject constructor(
             throw IllegalArgumentException("minBufferSize is invalid")
         }
 
-        val fileName = createFileName()
-        val file = File(context.filesDir, "recording/$fileName")
-
-        file.parentFile?.mkdirs()
+        val recordingDirectory = File(context.filesDir, "recording")
+        if (!recordingDirectory.exists()){
+            recordingDirectory.mkdirs()
+        }
+        val fileName = createFileName() +".wav"
+        val file = File(recordingDirectory, fileName)
         outputFile = file
 
-        audioRecord = AudioRecord(
+        val recorder = AudioRecord(
             MediaRecorder.AudioSource.MIC,
             sampleRate,
             channelConfig,
             audioFormat,
             minBufferSize) as AudioRecord?
 
-        if (audioRecord?.state != AudioRecord.STATE_INITIALIZED) {
-            audioRecord?.release()
-            audioRecord = null
+        if (recorder?.state != AudioRecord.STATE_INITIALIZED) {
+            recorder?.release()
             throw IllegalArgumentException("AudioRecord is not initialized")
         }
-
-        audioRecord?.startRecording()
+        audioRecord = recorder
+        recorder.startRecording()
         isRecording = true
         recordingJob = scope.launch(Dispatchers.IO) {
             // 开始读取录音
             val buffer = ByteArray(minBufferSize)
-            FileOutputStream(outputFile!!).use { outputStream ->
+            FileOutputStream(outputFile).use { outputStream ->
                 while (isRecording) {
-                    val readBytes = audioRecord?.read(buffer, 0, buffer.size) ?: 0
+                    val readBytes = recorder.read(buffer, 0, buffer.size) ?: 0
                     if (readBytes > 0) {
                         outputStream.write(buffer, 0, readBytes)
                     }
@@ -113,11 +120,20 @@ class AndroidAudioRecorder @Inject constructor(
         audioRecord?.release()
         audioRecord = null
         recordingJob = null
-        return outputFile?.absolutePath ?: throw IllegalArgumentException("outputFile is null")
+
+        val pcm = outputFile?: throw IllegalArgumentException("pcmFile is null")
+        val wavFile = File(pcm.parent, pcm.nameWithoutExtension + ".wav")
+
+        withContext(Dispatchers.IO) {
+            WavFileWriter().convertPcmToWav(pcm, wavFile, sampleRate, CHANNELS, BITS_PER_SAMPLE)
+        }
+        pcm.delete()
+
+        return wavFile.absolutePath
     }
 
     private fun createFileName(): String {
         val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-        return "recording_${formatter.format(Date())}.pcm"
+        return "recording_${formatter.format(Date())}"
     }
 }
