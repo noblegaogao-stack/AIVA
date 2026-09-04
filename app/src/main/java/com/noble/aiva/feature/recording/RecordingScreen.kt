@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.core.util.TimeUtils.formatDuration
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.noble.aiva.domain.model.Recording
+import java.time.Duration
 
 @Composable()
 fun RecordingScreen(viewModel: RecordingViewModel,
@@ -26,6 +30,7 @@ fun RecordingScreen(viewModel: RecordingViewModel,
     val context = LocalContext.current
     val isRecording by viewModel.isRecording.collectAsStateWithLifecycle()
     val recordingFile by viewModel.recordingFile.collectAsStateWithLifecycle()
+    val recordings by viewModel.recordings.collectAsStateWithLifecycle()
 
     val uiState by viewModel.uiState.collectAsState()
 
@@ -105,6 +110,40 @@ fun RecordingScreen(viewModel: RecordingViewModel,
         Button(onRecordingFinish) {
             Text("进入下一页")
         }
+
     }
 
+
+}
+
+
+@Composable
+fun RecordingItem(
+    recording: Recording
+){
+    Column {
+        Text(
+            text = recording.fileName
+        )
+
+        Text(
+            text = formatDuration(
+                recording.duration
+            )
+        )
+
+        Text(text = recording.status.name)
+    }
+}
+
+fun formatDuration(duration: Long): String{
+    val totalSeconds = duration /1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+
+    return String.format(
+        "%0.2:%02d",
+        minutes,
+        seconds
+    )
 }

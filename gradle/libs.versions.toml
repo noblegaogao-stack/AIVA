@@ -15,7 +15,8 @@ material3 = "1.4.0"
 kotlin = "2.3.10"
 # Hilt 升级至 2.59
 hilt = "2.59"          # 原为 2.57.1
-
+room = "2.6.1"
+#room3 和 room 有什么不同
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -40,9 +41,26 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 #hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt"
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
+
+
+# Room
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+androidx-room-rxjava2 = { group = "androidx.room", name = "room-rxjava2", version.ref = "room" }
+androidx-room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "room" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kotlin" }
 
+[bundles]
+room = [
+    "androidx-room-runtime",
+    "androidx-room-ktx"
+]

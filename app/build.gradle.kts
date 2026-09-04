@@ -56,4 +56,13 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // Room (使用 bundle)
+    implementation(libs.bundles.room)
+    ksp(libs.androidx.room.compiler)
+
+    // Room 可选功能（按需添加）
+    // implementation(libs.androidx.room.paging)
+    // implementation(libs.androidx.room.rxjava2)
+    // implementation(libs.androidx.room.rxjava3)
 }
