@@ -8,6 +8,7 @@ import com.noble.aiva.domain.usecase.ObserverRecordingUseCase
 import com.noble.aiva.domain.usecase.SavedRecordingUseCase
 import com.noble.aiva.domain.usecase.StartRecordingUseCase
 import com.noble.aiva.domain.usecase.StopRecordingUseCase
+import com.noble.aiva.domain.usecase.UploadRecordingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +24,8 @@ class RecordingViewModel @Inject constructor(
     private val startRecordingUseCase: StartRecordingUseCase,
     private val stopRecordingUseCase: StopRecordingUseCase,
     private val savedRecordingUseCase: SavedRecordingUseCase,
-    observerRecordingUseCase: ObserverRecordingUseCase
+    observerRecordingUseCase: ObserverRecordingUseCase,
+    private val uploadRecordingUseCase: UploadRecordingUseCase
     ): ViewModel(){
 
     private val _uiState = MutableStateFlow<RecordingUiState>(RecordingUiState())
@@ -108,5 +110,16 @@ class RecordingViewModel @Inject constructor(
     }
     fun  clearErrorMessage() {
         _errorMessage.value = null
+    }
+
+    fun uploadRecording(recordingId: Long){
+        viewModelScope.launch {
+            try {
+                val audioId = uploadRecordingUseCase(recordingId)
+                println("上传成功 audioId = $audioId")
+            } catch (e: Exception){
+                println("上传失败： ${e.message}")
+            }
+        }
     }
 }

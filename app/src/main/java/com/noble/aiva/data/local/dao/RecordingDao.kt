@@ -41,6 +41,13 @@ interface RecordingDao {
     @Update
     suspend fun update(recording: RecordingEntity)
 
+    @Query("""
+        UPDATE recordings 
+        SET status = :status 
+        WHERE id = :id
+    """)
+    suspend fun updateStatus(id: Long, status: String)
+
     @Delete
     suspend fun delete(recording: RecordingEntity)
 }

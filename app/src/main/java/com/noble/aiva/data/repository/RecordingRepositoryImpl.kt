@@ -3,10 +3,13 @@ package com.noble.aiva.data.repository
 import com.noble.aiva.data.local.dao.RecordingDao
 import com.noble.aiva.data.local.entity.RecordingEntity
 import com.noble.aiva.data.local.toDomain
+import com.noble.aiva.data.network.AudioUploadDataSource
 import com.noble.aiva.domain.repository.RecordingRepository
 import com.noble.aiva.domain.model.Recording
+import com.noble.aiva.domain.model.RecordingStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -21,7 +24,8 @@ import javax.inject.Inject
  *  └── RecordingDao
  */
 class RecordingRepositoryImpl @Inject constructor(
-    private val dao: RecordingDao
+    private val dao: RecordingDao,
+    private val audioUploadDataSource: AudioUploadDataSource
 ) : RecordingRepository {
     override suspend fun insert(recording: Recording): Long {
         return dao.insert(RecordingEntity(
@@ -64,5 +68,30 @@ class RecordingRepositoryImpl @Inject constructor(
             createdAt = recording.createdAt,
             status = recording.status.name
             ))
+    }
+
+    override suspend fun upload(recording: Recording): String {
+        val file = File(recording.filePath)
+
+        if (!file.exists()){
+            throw IllegalStateException(
+                "音频文件不存在，${recording.filePath}"
+            )
+        }
+        val response = audioUploadDataSource.upload(file)
+
+        if (response.code != 200){
+            throw IllegalStateException(response.message)
+        }
+        return response.data?.audioId?: throw IllegalStateException(
+            "服务器没有返回 audioId"
+        )
+    }
+
+    override suspend fun updateStatus(
+        recordingId: Long,
+        status: RecordingStatus
+    ) {
+        dao.updateStatus(id = recordingId, status = status.name)
     }
 }
