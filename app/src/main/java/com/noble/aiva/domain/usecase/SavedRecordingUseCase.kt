@@ -1,6 +1,6 @@
 package com.noble.aiva.domain.usecase
 
-import com.noble.aiva.domain.RecordingRepository
+import com.noble.aiva.domain.repository.RecordingRepository
 import com.noble.aiva.domain.model.Recording
 import com.noble.aiva.domain.model.RecordingStatus
 import javax.inject.Inject

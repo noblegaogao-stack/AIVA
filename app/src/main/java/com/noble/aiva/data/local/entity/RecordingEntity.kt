@@ -16,14 +16,3 @@ data class RecordingEntity(
     val createdAt: Long,
     val status: String
 )
-
-fun RecordingEntity.toDomain(): Recording{
-    return Recording(
-        id = id,
-        filePath = filePath,
-        fileName = fileName,
-        duration = duration,
-        createdAt = createdAt,
-        status = RecordingStatus.valueOf(status)
-        )
-}

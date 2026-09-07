@@ -2,13 +2,24 @@ package com.noble.aiva.data.repository
 
 import com.noble.aiva.data.local.dao.RecordingDao
 import com.noble.aiva.data.local.entity.RecordingEntity
-import com.noble.aiva.data.local.entity.toDomain
-import com.noble.aiva.domain.RecordingRepository
+import com.noble.aiva.data.local.toDomain
+import com.noble.aiva.domain.repository.RecordingRepository
 import com.noble.aiva.domain.model.Recording
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+/**
+ * @inject constructor
+ * 如果 Hilt 知道怎么创建 RecordingDao，那么创建 RecordingRepositoryImpl 时，就把 Dao 自动传进来。
+ *
+ * Hilt
+ *  │
+ *  ↓
+ * RecordingRepositoryImpl
+ *  │
+ *  └── RecordingDao
+ */
 class RecordingRepositoryImpl @Inject constructor(
     private val dao: RecordingDao
 ) : RecordingRepository {

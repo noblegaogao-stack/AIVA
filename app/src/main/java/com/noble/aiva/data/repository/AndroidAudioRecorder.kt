@@ -98,7 +98,7 @@ class AndroidAudioRecorder @Inject constructor(
             val buffer = ByteArray(minBufferSize)
             FileOutputStream(outputFile).use { outputStream ->
                 while (isRecording) {
-                    val readBytes = recorder.read(buffer, 0, buffer.size) ?: 0
+                    val readBytes = recorder.read(buffer, 0, buffer.size)
                     if (readBytes > 0) {
                         outputStream.write(buffer, 0, readBytes)
                     }

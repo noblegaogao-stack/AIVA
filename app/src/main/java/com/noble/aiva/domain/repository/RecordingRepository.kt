@@ -1,4 +1,4 @@
-package com.noble.aiva.domain
+package com.noble.aiva.domain.repository
 
 import com.noble.aiva.domain.model.Recording
 import kotlinx.coroutines.flow.Flow
