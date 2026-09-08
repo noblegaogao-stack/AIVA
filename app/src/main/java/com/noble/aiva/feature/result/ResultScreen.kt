@@ -7,7 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.noble.aiva.feature.recording.RecordingViewModel
 
 @Composable
 fun ResultScreen(resultViewModel: ResultViewModel,  onBack: () -> Unit) {

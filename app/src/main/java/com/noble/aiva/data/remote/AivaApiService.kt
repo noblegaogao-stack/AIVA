@@ -1,4 +1,4 @@
-package com.noble.aiva.data.network
+package com.noble.aiva.data.remote
 
 import com.noble.aiva.domain.model.UploadRecordingResponse
 import okhttp3.MultipartBody

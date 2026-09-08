@@ -11,7 +11,8 @@ class UploadRecordingUseCase @Inject constructor(
     private val repository: RecordingRepository
 ) {
     suspend operator fun invoke(
-        recordingId: Long
+        recordingId: Long,
+        onProgress: (Int) -> Unit
     ): String {
 
         // 1. 查询录音
@@ -26,7 +27,7 @@ class UploadRecordingUseCase @Inject constructor(
 
         return try {
             // 3. 真正执行上传
-            val audioId = repository.upload(recording)
+            val audioId = repository.upload(recording,onProgress)
 
             // 4. 上传成功
             repository.updateStatus(

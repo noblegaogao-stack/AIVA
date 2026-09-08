@@ -1,13 +1,12 @@
 package com.noble.aiva.di
 
-import com.noble.aiva.data.network.AivaApiService
+import com.noble.aiva.data.remote.AivaApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 
@@ -38,14 +37,14 @@ object NetworkModule{
             GsonConverterFactory.create()
         ).build()
     }
-}
 
-@Provides
-@Singleton
-fun provideApiService(
-    retrofit: Retrofit
-): AivaApiService{
-    return retrofit.create(
-        AivaApiService::class.java
-    )
+    @Provides
+    @Singleton
+    fun provideApiService(
+        retrofit: Retrofit
+    ): AivaApiService{
+        return retrofit.create(
+            AivaApiService::class.java
+        )
+    }
 }

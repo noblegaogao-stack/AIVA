@@ -4,14 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.noble.aiva.feature.home.HomeViewModel
-import com.noble.aiva.feature.recording.RecordingViewModel
-import com.noble.aiva.feature.result.ResultViewModel
 import com.noble.aiva.navigation.AppNavGraph
 import com.noble.aiva.ui.theme.AIVATheme
 import dagger.hilt.android.AndroidEntryPoint

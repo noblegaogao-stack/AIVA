@@ -20,7 +20,8 @@ interface RecordingRepository {
     )
 
     suspend fun upload(
-        recording: Recording
+        recording: Recording,
+        onProgress: (Int) -> Unit
     ): String
 
     suspend fun updateStatus(

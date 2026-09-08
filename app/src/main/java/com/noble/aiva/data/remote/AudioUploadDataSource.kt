@@ -1,4 +1,4 @@
-package com.noble.aiva.data.network
+package com.noble.aiva.data.remote
 
 import com.noble.aiva.domain.model.UploadRecordingResponse
 
@@ -7,15 +7,20 @@ import javax.inject.Inject
 
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 
 class AudioUploadDataSource @Inject constructor(
     private val apiService: AivaApiService
 ){
     suspend fun upload(
-        file: File
+        file: File,
+        onProgress: (Int) -> Unit
     ): UploadRecordingResponse{
-        val requestBody = file.asRequestBody("audio.wav".toMediaType())
+//        val requestBody = file.asRequestBody("audio.wav".toMediaType())
+
+        val requestBody = ProgressRequestBody(
+            file = file,
+            contentType = "audio/wav".toMediaType(),
+            onProgress  = onProgress)
 
         val multipart = MultipartBody.Part.createFormData(
             name = "file",

@@ -3,7 +3,7 @@ package com.noble.aiva.data.repository
 import com.noble.aiva.data.local.dao.RecordingDao
 import com.noble.aiva.data.local.entity.RecordingEntity
 import com.noble.aiva.data.local.toDomain
-import com.noble.aiva.data.network.AudioUploadDataSource
+import com.noble.aiva.data.remote.AudioUploadDataSource
 import com.noble.aiva.domain.repository.RecordingRepository
 import com.noble.aiva.domain.model.Recording
 import com.noble.aiva.domain.model.RecordingStatus
@@ -70,7 +70,7 @@ class RecordingRepositoryImpl @Inject constructor(
             ))
     }
 
-    override suspend fun upload(recording: Recording): String {
+    override suspend fun upload(recording: Recording, onProgress: (Int) -> Unit): String {
         val file = File(recording.filePath)
 
         if (!file.exists()){
@@ -78,7 +78,7 @@ class RecordingRepositoryImpl @Inject constructor(
                 "音频文件不存在，${recording.filePath}"
             )
         }
-        val response = audioUploadDataSource.upload(file)
+        val response = audioUploadDataSource.upload(file,onProgress)
 
         if (response.code != 200){
             throw IllegalStateException(response.message)

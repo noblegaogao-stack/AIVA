@@ -1,8 +1,7 @@
-package com.noble.aiva.feature.recording
+package com.noble.aiva.ui.recording
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,11 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.core.util.TimeUtils.formatDuration
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.noble.aiva.domain.model.Recording
 import com.noble.aiva.domain.model.RecordingStatus
-import java.time.Duration
 
 @SuppressLint("MissingPermission")
 @Composable()
@@ -65,6 +62,7 @@ fun RecordingScreen(viewModel: RecordingViewModel,
             items = recordings,
             key ={ it.id}
         ) { recording ->
+
             RecordingItem(
                 recording = recording,
                 onUploadClick = { id ->
@@ -74,73 +72,95 @@ fun RecordingScreen(viewModel: RecordingViewModel,
                 }
             )
         }
+
     }
 
 
     // 这里产生audioId
-//    Column(
-//        modifier = Modifier.fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//
-//        Text(
-//            text = if (uiState.isRecording){
-//                "正在录音"
-//            } else {
-//                "未录音"
-//            }
-//        )
-//
-//        Text(
-//            text = "${uiState.duration} 秒"
-//        )
-//
-//        // Recording 正在录音，有一个 录音计时器 时间跳动，一个按钮“停止录音”，点击停止计时器
-//        Button(onClick = {
-//            if (uiState.isRecording){
-//                viewModel.stopRecording()
-//            } else {
-//                /**
-//                 * 当前没有录音，
-//                 * 先检查权限
-//                 */
-//                val hasPermission = ContextCompat.checkSelfPermission(
-//                    context,
-//                    Manifest.permission.RECORD_AUDIO
-//                ) == PackageManager.PERMISSION_GRANTED
-//
-//                if (hasPermission){
-//                    viewModel.startRecording()
-//                } else {
-//                    permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
-//                }
-//            }
-//        }) {
-//            Text(
-//                text = if (uiState.isRecording){
-//                    "停止录音"
-//                } else {
-//                    "开始录音"
-//                }
-//            )
-//        }
-//
-//        recordingFile?.let{filePath ->
-//            Text(
-//                text = "录音文件路径：$filePath"
-//            )
-//        }
-//
-//
-//        // 触发导航函数，
-//        Button(onRecordingFinish) {
-//            Text("进入下一页")
-//        }
-//
-//    }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Text(
+            text = if (uiState.isRecording){
+                "正在录音"
+            } else {
+                "未录音"
+            }
+        )
+
+        Text(
+            text = "${uiState.duration} 秒"
+        )
+
+        // Recording 正在录音，有一个 录音计时器 时间跳动，一个按钮“停止录音”，点击停止计时器
+        Button(onClick = {
+            if (uiState.isRecording){
+                viewModel.stopRecording()
+            } else {
+                /**
+                 * 当前没有录音，
+                 * 先检查权限
+                 */
+                val hasPermission = ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.RECORD_AUDIO
+                ) == PackageManager.PERMISSION_GRANTED
+
+                if (hasPermission){
+                    viewModel.startRecording()
+                } else {
+                    permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                }
+            }
+        }) {
+            Text(
+                text = if (uiState.isRecording){
+                    "停止录音"
+                } else {
+                    "开始录音"
+                }
+            )
+        }
+
+        recordingFile?.let{filePath ->
+            Text(
+                text = "录音文件路径：$filePath"
+            )
+        }
+
+
+        // 触发导航函数，
+        Button(onRecordingFinish) {
+            Text("进入下一页")
+        }
+
+
+
+    }
 
 }
+//
+//Button(
+//onClick = {
+//    viewModel.uploadRecording(
+//        recording.id
+//    )
+//},
+//enabled = !uploadState.isUploading
+//) {
+//
+//    if (uploadState.isUploading) {
+//
+//        Text("上传中 ${uploadState.progress}%")
+//
+//    } else {
+//
+//        Text("上传")
+//    }
+//}
 
 @Composable
 fun RecordingItem(
@@ -210,7 +230,12 @@ fun RecordingItem(
                 )
             }
         }
+
+
+
     }
+
+
 }
 
 fun formatDuration(duration: Long): String{

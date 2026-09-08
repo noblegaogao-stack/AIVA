@@ -1,4 +1,4 @@
-package com.noble.aiva.feature.recording
+package com.noble.aiva.ui.recording
 
 data class RecordingUiState(
     val isRecording: Boolean = false,

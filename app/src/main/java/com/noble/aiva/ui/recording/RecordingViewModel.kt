@@ -1,4 +1,4 @@
-package com.noble.aiva.feature.recording
+package com.noble.aiva.ui.recording
 
 import android.Manifest
 import androidx.annotation.RequiresPermission
@@ -61,6 +61,9 @@ class RecordingViewModel @Inject constructor(
             initialValue = emptyList()
             )
 
+    private val _uploadState = MutableStateFlow(UploadUiState())
+    private val uploadUiState = _uploadState.asStateFlow()
+
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     fun onEvent(event: RecordingEvent){
         when(event){
@@ -113,12 +116,44 @@ class RecordingViewModel @Inject constructor(
     }
 
     fun uploadRecording(recordingId: Long){
+        if(_uploadState.value.isUploading){
+            return
+        }
+
         viewModelScope.launch {
+            _uploadState.value =
+                UploadUiState(
+                    isUploading = true,
+                    progress = 0
+            )
+
             try {
-                val audioId = uploadRecordingUseCase(recordingId)
+                val audioId = uploadRecordingUseCase(
+                    recordingId,
+                    onProgress = { progress ->
+                        _uploadState.value =
+                            UploadUiState(
+                                isUploading = true,
+                                progress = progress
+                        )
+                    }
+                )
+
+                _uploadState.value =
+                    UploadUiState(
+                        isUploading = false,
+                        progress = 100
+                    )
+
                 println("上传成功 audioId = $audioId")
             } catch (e: Exception){
                 println("上传失败： ${e.message}")
+                _uploadState.value =
+                    UploadUiState(
+                        isUploading = false,
+                        progress = 0,
+                        errorMessage = e.message ?: "上传失败"
+                    )
             }
         }
     }

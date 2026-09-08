@@ -1,4 +1,4 @@
-package com.noble.aiva.feature.recording
+package com.noble.aiva.ui.recording
 
 sealed interface RecordingEvent {
     data object StartClicked: RecordingEvent
