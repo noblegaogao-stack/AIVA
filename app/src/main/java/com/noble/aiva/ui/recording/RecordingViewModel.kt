@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import okio.IOException
 import java.io.File
 import javax.inject.Inject
 
@@ -36,23 +37,14 @@ class RecordingViewModel @Inject constructor(
     private val _isRecording = MutableStateFlow(false)
     val isRecording: StateFlow<Boolean> = _isRecording.asStateFlow()
 
-    private val _recordingFile = MutableStateFlow<String?>(null)
-    val recordingFile = _recordingFile.asStateFlow()
-
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+
     /**
-     * stateIn 什么意思
-     *
-     * Room
-     *  ↓
-     * Flow
-     *  ↓
-     * StateFlow
-     *  ↓
-     * Compose
-     *
+     * ============================================================
+     * 录音列表
+     * ============================================================
      */
     val recordings = observerRecordingUseCase()
         .stateIn(
@@ -61,22 +53,27 @@ class RecordingViewModel @Inject constructor(
             initialValue = emptyList()
             )
 
+    /**
+     * ============================================================
+     * 上传 UI 状态
+     * ============================================================
+     */
     private val _uploadState = MutableStateFlow(UploadUiState())
-    private val uploadUiState = _uploadState.asStateFlow()
+    val uploadUiState = _uploadState.asStateFlow()
 
-    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
-    fun onEvent(event: RecordingEvent){
-        when(event){
-            RecordingEvent.StartClicked -> {
-                startRecording()
-            }
+    /**
+     * ============================================================
+     * 当前录音文件
+     * ============================================================
+     */
+    private val _recordingFile = MutableStateFlow<String?>(null)
+    val recordingFile = _recordingFile.asStateFlow()
 
-            RecordingEvent.StopClicked -> {
-                stopRecording()
-            }
-        }
-    }
-
+    /**
+     * ============================================================
+     * 开始录音
+     * ============================================================
+     */
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     fun startRecording(){
         //这里启动录音，但是没有开启协程，是因为创建AudioRecorder对象的时候，在后台录音Job
@@ -115,7 +112,15 @@ class RecordingViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
+    /**
+     * ============================================================
+     * 上传录音
+     * ============================================================
+     */
     fun uploadRecording(recordingId: Long){
+        /**
+         * 防止重复点击
+         */
         if(_uploadState.value.isUploading){
             return
         }
@@ -131,6 +136,7 @@ class RecordingViewModel @Inject constructor(
                 val audioId = uploadRecordingUseCase(
                     recordingId,
                     onProgress = { progress ->
+
                         _uploadState.value =
                             UploadUiState(
                                 isUploading = true,
@@ -138,7 +144,9 @@ class RecordingViewModel @Inject constructor(
                         )
                     }
                 )
-
+                /**
+                 * 上传成功
+                 */
                 _uploadState.value =
                     UploadUiState(
                         isUploading = false,
@@ -146,6 +154,12 @@ class RecordingViewModel @Inject constructor(
                     )
 
                 println("上传成功 audioId = $audioId")
+            } catch (e: IOException){
+                _uploadState.value =
+                    UploadUiState(
+                        isUploading = false,
+                        errorMessage = "网络连接失败，请检查网络"
+                    )
             } catch (e: Exception){
                 println("上传失败： ${e.message}")
                 _uploadState.value =

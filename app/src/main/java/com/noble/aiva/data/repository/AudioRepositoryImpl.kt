@@ -8,6 +8,7 @@ import kotlinx.coroutines.delay
 class AudioRepositoryImpl @Inject constructor(
     private val androidAudioRecorder: AndroidAudioRecorder): AudioRepository {
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     override fun startRecord(){
         println("startRecord， 打开麦克风")
         androidAudioRecorder.startRecording()

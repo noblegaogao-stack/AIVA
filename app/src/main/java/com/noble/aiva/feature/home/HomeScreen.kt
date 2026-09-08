@@ -11,7 +11,7 @@ import androidx.compose.runtime.collectAsState
 @Composable
 fun HomeScreen9(
     homeViewModel: HomeViewModel,
-    onStartRecording: () -> Unit
+    onNavigateToRecording: () -> Unit
 ){
     val uiState = homeViewModel.uiState.collectAsState()
 
@@ -19,7 +19,7 @@ fun HomeScreen9(
         // TODO ， 初始化的是，recording， 感觉不对 ？
         Text("Home 主界面，显示历史记录 和 录音按钮 : ${uiState.value.welcomeText}, ${uiState.value.isRecording}")
 
-        Button(onClick = onStartRecording) {
+        Button(onClick = onNavigateToRecording) {
             homeViewModel.startRecording()
             Text("开始录音")
         }

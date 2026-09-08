@@ -21,21 +21,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             AIVATheme {
                 AppNavGraph()
-//                HomeScreen5(viewModel)
-//                HomeScreen4()
-//                Counter()
-//                Welcome()
-
-//                HomeScreen3()
-
-//                HomeScreen2()
-//                HomeScreen(count = viewModel.count.collectAsState().value, onIncrease = viewModel::increase)
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
             }
         }
     }
