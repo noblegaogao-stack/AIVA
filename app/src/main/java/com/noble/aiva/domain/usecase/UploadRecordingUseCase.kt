@@ -39,7 +39,7 @@ class UploadRecordingUseCase @Inject constructor(
             // 5. 上传失败
             repository.updateStatus(
                 recordingId = recordingId,
-                status = RecordingStatus.FAILED
+                status = RecordingStatus.UPLOAD_FAILED
             )
             throw e
         }

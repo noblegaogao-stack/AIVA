@@ -3,6 +3,8 @@ package com.noble.aiva.data.repository
 import com.noble.aiva.data.local.dao.RecordingDao
 import com.noble.aiva.data.local.entity.RecordingEntity
 import com.noble.aiva.data.local.toDomain
+import com.noble.aiva.data.remote.AsrDataSource
+import com.noble.aiva.data.remote.AsrResponse
 import com.noble.aiva.data.remote.AudioUploadDataSource
 import com.noble.aiva.domain.repository.RecordingRepository
 import com.noble.aiva.domain.model.Recording
@@ -24,11 +26,12 @@ import javax.inject.Inject
  *  └── RecordingDao
  */
 class RecordingRepositoryImpl @Inject constructor(
-    private val dao: RecordingDao,
-    private val audioUploadDataSource: AudioUploadDataSource
-) : RecordingRepository {
+    private val recordingDao: RecordingDao,
+    private val audioUploadDataSource: AudioUploadDataSource,
+    private val asrDataSource: AsrDataSource
+    ) : RecordingRepository {
     override suspend fun insert(recording: Recording): Long {
-        return dao.insert(RecordingEntity(
+        return recordingDao.insert(RecordingEntity(
             id = recording.id,
             filePath = recording.filePath,
             fileName = recording.fileName,
@@ -50,17 +53,25 @@ class RecordingRepositoryImpl @Inject constructor(
      *                             List<Recording>
      */
     override fun observeAll(): Flow<List<Recording>> {
-        return dao.observeAll().map { entities ->
+        return recordingDao.observeAll().map { entities ->
             entities.map { it.toDomain() }
         }
     }
 
     override suspend fun getById(id: Long): Recording? {
-       return dao.getById(id)?.toDomain()
+       return recordingDao.getById(id)?.toDomain()
+    }
+
+    override fun observeById(id: Long): Flow<Recording?> {
+        return recordingDao
+            .observeById(id)
+            .map { entity ->
+                entity?.toDomain()
+            }
     }
 
     override suspend fun delete(recording: Recording) {
-        dao.delete(RecordingEntity(
+        recordingDao.delete(RecordingEntity(
             id = recording.id,
             filePath = recording.filePath,
             fileName = recording.fileName,
@@ -92,6 +103,26 @@ class RecordingRepositoryImpl @Inject constructor(
         recordingId: Long,
         status: RecordingStatus
     ) {
-        dao.updateStatus(id = recordingId, status = status.name)
+        recordingDao.updateStatus(id = recordingId, status = status.name)
+    }
+
+    override suspend fun uploadAudioId(recordingId: Long, audioId: String) {
+        recordingDao.updateAudioId(id = recordingId,audioId = audioId)
+    }
+
+    override suspend fun startAsr(audioId: String) {
+        asrDataSource.startAsr(audioId)
+    }
+
+    override suspend fun getAsrResult(audioId: String): AsrResponse {
+        return asrDataSource.getResult(audioId)
+    }
+
+    override suspend fun saveTranscript(recordingId: Long, transcript: String) {
+        recordingDao.updateTranscript(
+            id =  recordingId,
+            transcript = transcript,
+            status = RecordingStatus.COMPLETED.name
+        )
     }
 }

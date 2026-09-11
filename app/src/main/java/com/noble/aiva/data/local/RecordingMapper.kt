@@ -7,10 +7,19 @@ import com.noble.aiva.domain.model.RecordingStatus
 fun RecordingEntity.toDomain(): Recording {
     return Recording(
         id = id,
+
         filePath = filePath,
+
         fileName = fileName,
+
         duration = duration,
+
         createdAt = createdAt,
-        status = RecordingStatus.valueOf(status)
+
+        status = RecordingStatus.valueOf(status),
+
+        audioId = audioId,
+
+        transcript = transcript
         )
 }

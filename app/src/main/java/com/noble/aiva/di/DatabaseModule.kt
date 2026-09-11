@@ -58,7 +58,9 @@ object DatabaseModule {
             context,
             AivaDatabase::class.java,
             "aiva.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     /**

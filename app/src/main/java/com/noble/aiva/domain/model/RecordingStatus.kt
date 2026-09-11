@@ -6,5 +6,6 @@ enum class RecordingStatus {
     UPLOADED,
     PROCESSING,
     COMPLETED,
-    FAILED
+    UPLOAD_FAILED,
+    ASR_FAILED
 }

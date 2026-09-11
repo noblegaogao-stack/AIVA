@@ -374,14 +374,14 @@ fun RecordingItem(
         when (recording.status) {
 
             RecordingStatus.LOCAL ,
-            RecordingStatus.FAILED -> {
+            RecordingStatus.ASR_FAILED -> {
 
                 Button(
                     onClick = {
                         onUploadClick(recording.id)
                     }
                 ) {
-                    if (recording.status == RecordingStatus.FAILED){
+                    if (recording.status == RecordingStatus.UPLOAD_FAILED){
                         Text("重试")
                     } else {
                         Text("上传")
@@ -434,11 +434,11 @@ fun RecordingItem(
                 }
             }
 
-//            else -> {
-//                Text(
-//                    text = recording.status.name
-//                )
-//            }
+            else -> {
+                Text(
+                    text = recording.status.name
+                )
+            }
         }
     }
 }
@@ -470,8 +470,10 @@ private fun getStatusText(
         RecordingStatus.COMPLETED ->
             "识别完成"
 
-        RecordingStatus.FAILED ->
+        RecordingStatus.UPLOAD_FAILED ->
             "上传失败"
+
+        else -> "null"
     }
 }
 

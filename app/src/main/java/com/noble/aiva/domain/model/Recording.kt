@@ -6,5 +6,7 @@ data class Recording(
     val fileName: String,
     val duration: Long,
     val createdAt: Long,
-    val status: RecordingStatus
+    val status: RecordingStatus,
+    val audioId: String? = null,
+    val transcript: String? = null
 )

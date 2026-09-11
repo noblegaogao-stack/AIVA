@@ -14,7 +14,7 @@ import com.noble.aiva.data.local.entity.RecordingEntity
     entities = [
         RecordingEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AivaDatabase: RoomDatabase() {

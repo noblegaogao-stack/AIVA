@@ -1,10 +1,12 @@
 package com.noble.aiva.data.remote
 
+import com.noble.aiva.data.repository.AudioRepository
 import com.noble.aiva.domain.model.UploadRecordingResponse
 import okhttp3.MultipartBody
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 
 /**
@@ -29,4 +31,19 @@ interface AivaApiService {
     suspend fun uploadRecording(
         @Part file: MultipartBody.Part
     ): UploadRecordingResponse
+
+    /**
+     * 启动ASR
+     */
+    @POST("api/asr/{audioId}")
+    suspend fun startAsr(
+        @Path("audioId") audioId: String
+    ): AsrResponse
+
+    /**
+     * 查询 ASR 结果
+     */
+    suspend fun getAsrResult(
+        @Path("audioId") audioId: String
+    ): AsrResponse
 }

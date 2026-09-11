@@ -59,9 +59,9 @@ fun AppNavGraph(){
 
         // Result 结束录音，显示录音时长，有一个按钮，回到Home， 有一个按钮，是否上传到服务器/上传AI分析。
         composable(
-            route = "result/{audioId}",
+            route = "result/{recordingId}",
             arguments = listOf(
-                navArgument("audioId"){
+                navArgument("recordingId"){
                     type = NavType.LongType
                 }
             )
