@@ -44,7 +44,8 @@ class ResultViewModel @Inject constructor(
      *
      * 15L
      */
-    private val recordingId: Long = savedStateHandler["recordingId"] ?: 0L
+    private val recordingId: Long = savedStateHandler["recordingId"]
+        ?: throw IllegalStateException("缺少 recordingId")
 
     /**
      * ==========================================================
@@ -63,7 +64,7 @@ class ResultViewModel @Inject constructor(
 
     /**
      * ==========================================================
-     * 3. 自动启动 ASR
+     * 3. 自动启动 ASR ， 防止重复启动
      * ==========================================================
      */
     private var hasStartedAsr = false

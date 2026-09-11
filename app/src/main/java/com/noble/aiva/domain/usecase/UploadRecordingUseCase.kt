@@ -29,11 +29,27 @@ class UploadRecordingUseCase @Inject constructor(
             // 3. 真正执行上传
             val audioId = repository.upload(recording,onProgress)
 
-            // 4. 上传成功
+
+            /**
+             * 4. ★ 保存 audioId
+             *
+             * 非常重要
+             */
+            repository.uploadAudioId(
+                recordingId = recordingId,
+                audioId = audioId
+            )
+            /**
+             * 5. 上传完成
+             */
             repository.updateStatus(
                 recordingId = recordingId,
                 status = RecordingStatus.UPLOADED
             )
+            /**
+             * 6. 返回 audioId
+             * return audioId
+             */
             audioId
         } catch (e: Exception) {
             // 5. 上传失败

@@ -12,6 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +29,15 @@ fun ResultScreen(
      * 观察当前录音
      */
     val recording by viewModel.recording.collectAsStateWithLifecycle()
+
+
+    /**
+     * 页面进入后自动启动 ASR
+     */
+    LaunchedEffect(Unit) {
+
+        viewModel.startTranscription()
+    }
 
     /**
      * Room 数据还没回来
@@ -86,38 +96,38 @@ fun ResultScreen(
         )
 
 
-//        when (currentRecording.status) {
-//
-//            RecordingStatus.UPLOADED,
-//            RecordingStatus.PROCESSING -> {
-//
-//                ProcessingView()
-//            }
-//
-//
-//            RecordingStatus.COMPLETED -> {
-//
-//                TranscriptView(
-//                    transcript =
-//                        currentRecording.transcript
-//                            ?: "没有识别结果"
-//                )
-//            }
-//
-//
-//            RecordingStatus.ASR_FAILED -> {
-//
-//                ErrorView()
-//            }
-//
-//
-//            else -> {
-//
-//                Text(
-//                    text = "当前状态无法进行语音识别"
-//                )
-//            }
-//        }
+        when (currentRecording.status) {
+
+            RecordingStatus.UPLOADED,
+            RecordingStatus.PROCESSING -> {
+
+                ProcessingView()
+            }
+
+
+            RecordingStatus.COMPLETED -> {
+
+                TranscriptView(
+                    transcript =
+                        currentRecording.transcript
+                            ?: "没有识别结果"
+                )
+            }
+
+
+            RecordingStatus.ASR_FAILED -> {
+
+                ErrorView()
+            }
+
+
+            else -> {
+
+                Text(
+                    text = "当前状态无法进行语音识别"
+                )
+            }
+        }
 
         Button(onClick = onBack) {
             Text("返回")
